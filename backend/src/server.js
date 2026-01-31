@@ -13,11 +13,13 @@ const PORT = process.env.PORT || 5001;
 const __dirname = path.resolve();
 
 // Middleware
-if (process.env.NODE_ENV !== "production") {
-    app.use(cors({
-        origin: "http://localhost:5173", // Assuming default Vite port for frontend
-    }));
-}
+const corsOptions = {
+    origin: process.env.NODE_ENV === 'production' 
+        ? process.env.CORS_ORIGIN 
+        : 'http://localhost:5173',
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json()); // This middleware will parse JSON bodies: req.body
 
@@ -32,10 +34,10 @@ app.use("/api/auth", authRoutes);
 
 // Serve frontend in production
 if (process.env.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, "../frontend/dist")));
+    app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 
     app.get("*", (req, res) => {
-        res.sendFile(path.resolve(__dirname, "../frontend", "dist", "index.html"));
+        res.sendFile(path.resolve(__dirname, "../../frontend/dist/index.html"));
     });
 }
 
