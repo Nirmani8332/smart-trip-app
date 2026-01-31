@@ -4,6 +4,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import Navbar from "./components/Navbar";
 
+// Forcing a new build on Vercel
 const App = () => {
   return (
     <div className="relative h-full w-full">
