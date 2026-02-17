@@ -1,13 +1,16 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import api from '../lib/axios';
+import AuthContext from '../context/AuthContext';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    
     const navigate = useNavigate();
+    const { login } = useContext(AuthContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -20,9 +23,17 @@ const LoginPage = () => {
         try {
             const { data } = await api.post('/auth/login', { email, password });
             toast.success('Logged in successfully!');
-            // TODO: Save user and token to global state/context
-            console.log(data); 
-            navigate('/');
+            
+            // Use the login function from context
+            login(data);
+
+            // Redirect based on role
+            if (data.role === 'vendor') {
+                navigate('/dashboard');
+            } else {
+                navigate('/');
+            }
+
         } catch (error) {
             console.error("Login error", error);
             toast.error(error.response?.data?.message || 'Failed to login.');

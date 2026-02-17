@@ -22,7 +22,12 @@ const CreateServiceModal = ({ setShowModal, setServices }) => {
             return toast.error('Name and Base Price are required.');
         }
 
-        const token = ""; // Replace with a valid token
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        const token = storedUser?.token;
+
+        if (!token) {
+            return toast.error('You must be logged in to create a service.');
+        }
 
         try {
             const res = await api.post('/inventory', newItem, {
@@ -91,8 +96,14 @@ export default function InventoryManagement() {
     useEffect(() => {
         const fetchInventory = async () => {
             try {
-                // In a real app, the token would be retrieved from a global state/storage
-                const token = ""; // Replace with a valid token for testing
+                const storedUser = JSON.parse(localStorage.getItem('user'));
+                const token = storedUser?.token;
+
+                if (!token) {
+                    setLoading(false);
+                    toast.error('Authentication token not found. Please log in.');
+                    return;
+                }
                 
                 const res = await api.get('/inventory', {
                     headers: {

@@ -7,7 +7,6 @@ const RegisterPage = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [role, setRole] = useState('user'); // 'user' or 'vendor'
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -20,7 +19,7 @@ const RegisterPage = () => {
 
         setLoading(true);
         try {
-            const { data } = await api.post('/auth/register', { name, email, password, role });
+            const { data } = await api.post('/auth/register', { name, email, password, role: 'user' });
             toast.success('Registration successful!');
             console.log(data);
             navigate('/login');
@@ -36,7 +35,7 @@ const RegisterPage = () => {
         <div className="min-h-screen bg-base-200 flex items-center justify-center">
             <div className="card w-full max-w-sm shrink-0 bg-base-100 shadow-2xl">
                 <form className="card-body" onSubmit={handleSubmit}>
-                    <h2 className="card-title">Register</h2>
+                    <h2 className="card-title">Traveler Registration</h2>
                     <div className="form-control">
                         <label className="label"><span className="label-text">Name</span></label>
                         <input
@@ -45,7 +44,7 @@ const RegisterPage = () => {
                             className="input input-bordered"
                             required
                             value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            onChange={(e) => setName(e.Tora.value)}
                         />
                     </div>
                     <div className="form-control">
@@ -69,13 +68,6 @@ const RegisterPage = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
-                    </div>
-                    <div className="form-control">
-                        <label className="label"><span className="label-text">Register as</span></label>
-                        <select className="select select-bordered" value={role} onChange={(e) => setRole(e.target.value)}>
-                            <option value="user">Traveler</option>
-                            <option value="vendor">Vendor</option>
-                        </select>
                     </div>
                     <div className="form-control mt-6">
                         <button className="btn btn-primary" type="submit" disabled={loading}>

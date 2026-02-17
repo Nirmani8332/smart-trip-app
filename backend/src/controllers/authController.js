@@ -14,7 +14,7 @@ const generateToken = (id) => {
 // @route   POST /api/auth/register
 // @access  Public
 export const registerUser = async (req, res) => {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, vendorDetails } = req.body;
 
     try {
         const userExists = await User.findOne({ email });
@@ -23,32 +23,62 @@ export const registerUser = async (req, res) => {
             return res.status(400).json({ message: "User already exists" });
         }
 
-        const user = await User.create({
+        const user = new User({
             name,
             email,
             password,
             role,
         });
 
+        const newUser = await user.save();
+
         // If the role is vendor, create a corresponding vendor entry
-        if (user.role === 'vendor') {
-            await Vendor.create({
-                user: user._id,
-                businessName: `${user.name}'s Business`, // Placeholder name
-            });
+        if (newUser.role === 'vendor') {
+            if (!vendorDetails) {
+                // If vendor role but no details, we should probably fail
+                // For now, rolling back user creation
+                await User.findByIdAndDelete(newUser._id);
+                return res.status(400).json({ message: "Vendor details are required for vendor registration." });
+            }
+
+            try {
+                const vendorData = {
+                    user: newUser._id,
+                    businessName: vendorDetails.businessName,
+                    businessType: vendorDetails.businessType,
+                    registrationNumber: vendorDetails.registrationNumber,
+                    taxId: vendorDetails.taxId,
+                    yearEstablished: vendorDetails.yearEstablished,
+                    businessEmail: vendorDetails.businessEmail,
+                    businessPhone: vendorDetails.businessPhone,
+                    website: vendorDetails.website,
+                    socialMedia: vendorDetails.socialMedia,
+                    address: vendorDetails.address,
+                    primaryContact: vendorDetails.primaryContact,
+                    services: vendorDetails.services,
+                    otherServices: vendorDetails.otherServices,
+                    bankDetails: vendorDetails.bankDetails,
+                    // Documents would be handled separately after upload
+                };
+
+                await Vendor.create(vendorData);
+
+            } catch (vendorError) {
+                // If vendor creation fails, roll back user creation
+                await User.findByIdAndDelete(newUser._id);
+                console.error("Error creating vendor:", vendorError);
+                return res.status(500).json({ message: "Failed to create vendor profile." });
+            }
         }
 
-        if (user) {
-            res.status(201).json({
-                _id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                token: generateToken(user._id),
-            });
-        } else {
-            res.status(400).json({ message: "Invalid user data" });
-        }
+        res.status(201).json({
+            _id: newUser._id,
+            name: newUser.name,
+            email: newUser.email,
+            role: newUser.role,
+            token: generateToken(newUser._id),
+        });
+
     } catch (error) {
         console.error("Error in registerUser:", error);
         res.status(500).json({ message: "Server error" });

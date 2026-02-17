@@ -6,6 +6,7 @@ import path from "path";
 import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import inventoryRoutes from './routes/inventoryRoutes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use(express.json()); // This middleware will parse JSON bodies: req.body
 // API Routes
 app.use("/api/auth", authRoutes);
 app.use('/api/inventory', inventoryRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 // Placeholder for other routes
 // app.use("/api/users", userRoutes);
 // app.use("/api/vendors", vendorRoutes);

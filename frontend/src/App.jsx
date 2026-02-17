@@ -1,3 +1,13 @@
+import VendorLoginPage from "./pages/VendorLoginPage";
+import VendorRegistrationPage from "./pages/VendorRegistrationPage";
+import UserProfilePage from "./pages/UserProfilePage";
+import MyTripsPage from "./pages/MyTripsPage";
+import TripDetailsPage from "./pages/TripDetailsPage";
+import NotificationsPage from "./pages/NotificationsPage";
+import HelpSupportPage from "./pages/HelpSupportPage";
+import SavedTripsPage from "./pages/SavedTripsPage";
+import ItineraryCustomizationPage from "./pages/ItineraryCustomizationPage";
+import ReviewsRatingsPage from "./pages/ReviewsRatingsPage";
 import { Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
@@ -15,8 +25,18 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/vendor/login" element={<VendorLoginPage />} />
+        <Route path="/vendor/register" element={<VendorRegistrationPage />} />
         <Route path="/dashboard" element={<VendorDashboard />} />
         <Route path="/inventory" element={<InventoryPage />} />
+        <Route path="/profile" element={<UserProfilePage />} />
+        <Route path="/my-trips" element={<MyTripsPage />} />
+        <Route path="/trips/:id" element={<TripDetailsPage />} />
+        <Route path="/notifications" element={<NotificationsPage />} />
+        <Route path="/help-support" element={<HelpSupportPage />} />
+        <Route path="/saved-trips" element={<SavedTripsPage />} />
+        <Route path="/itinerary/customize/:id" element={<ItineraryCustomizationPage />} />
+        <Route path="/reviews-ratings" element={<ReviewsRatingsPage />} />
       </Routes>
     </div>
   )
