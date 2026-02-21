@@ -8,6 +8,8 @@ import authRoutes from "./routes/authRoutes.js";
 import inventoryRoutes from './routes/inventoryRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
 
+import vendorRoutes from './routes/vendorRoutes.js';
+
 dotenv.config();
 
 const app = express();
@@ -29,9 +31,9 @@ app.use(express.json()); // This middleware will parse JSON bodies: req.body
 app.use("/api/auth", authRoutes);
 app.use('/api/inventory', inventoryRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/vendors', vendorRoutes);
 // Placeholder for other routes
 // app.use("/api/users", userRoutes);
-// app.use("/api/vendors", vendorRoutes);
 // app.use("/api/bookings", bookingRoutes);
 
 
