@@ -1,25 +1,40 @@
-import { Route, Routes } from "react-router-dom";
-import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
-import VendorDashboard from "./pages/VendorDashboard.jsx";
-import InventoryPage from "./pages/InventoryPage.jsx";
-import Navbar from "./components/Navbar";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-const App = () => {
+import HomePage from './pages/HomePage.jsx';
+import LoginPage from './pages/LoginPage.jsx';
+import RegisterPage from './pages/RegisterPage.jsx';
+import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
+import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
+import VendorRegisterPage from './pages/VendorRegisterPage.jsx';
+import InventoryManagement from './pages/InventoryManagement';
+import AvailabilityCalendar from './pages/AvailabilityCalendar';
+import BookingReview from './pages/BookingReview';
+import BulkDataUpload from './pages/BulkDataUpload.jsx';
+import VendorDashboard from './pages/VendorDashboard.jsx';
+import MyTrips from './pages/MyTrips.jsx';
+
+
+
+function App() {
   return (
-    <div className="relative h-full w-full">
-      <div className="absolute inset-0 -z-10 h-full w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_60%,#00FF9D40_100%)]"/>
-      <Navbar />
+    <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/LoginPage" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/dashboard" element={<VendorDashboard />} />
-        <Route path="/inventory" element={<InventoryPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+        <Route path="/vendor-register" element={<VendorRegisterPage />} />
+        <Route path="/inventory" element={<InventoryManagement />} />
+        <Route path="/availability-calendar" element={<AvailabilityCalendar />} />
+        <Route path="/booking-review" element={<BookingReview />} />
+        <Route path="/bulk-upload" element={<BulkDataUpload />} />
+        <Route path="/vendor-dashboard" element={<VendorDashboard />} />
+        <Route path="/my-trips" element={<MyTrips />} />
       </Routes>
-    </div>
-  )
+    </Router>
+  );
 }
 
-export default App
+export default App;

@@ -1,14 +1,6 @@
-import User from "../models/User.js";
-import Vendor from "../models/Vendor.js";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
-
-// Generate JWT
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: "30d",
-  });
-};
+import bcrypt from 'bcryptjs';
+import User from '../models/User.js'; // Assuming you have a User model
+import generateToken from '../utils/generateToken.js';
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
@@ -20,23 +12,18 @@ export const registerUser = async (req, res) => {
         const userExists = await User.findOne({ email });
 
         if (userExists) {
-            return res.status(400).json({ message: "User already exists" });
+            return res.status(400).json({ message: 'User already exists' });
         }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
         const user = await User.create({
             name,
             email,
-            password,
+            password: hashedPassword,
             role,
         });
-
-        // If the role is vendor, create a corresponding vendor entry
-        if (user.role === 'vendor') {
-            await Vendor.create({
-                user: user._id,
-                businessName: `${user.name}'s Business`, // Placeholder name
-            });
-        }
 
         if (user) {
             res.status(201).json({
@@ -47,11 +34,10 @@ export const registerUser = async (req, res) => {
                 token: generateToken(user._id),
             });
         } else {
-            res.status(400).json({ message: "Invalid user data" });
+            res.status(400).json({ message: 'Invalid user data' });
         }
     } catch (error) {
-        console.error("Error in registerUser:", error);
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
@@ -73,10 +59,25 @@ export const loginUser = async (req, res) => {
                 token: generateToken(user._id),
             });
         } else {
-            res.status(401).json({ message: "Invalid email or password" });
+            res.status(401).json({ message: 'Invalid email or password' });
         }
     } catch (error) {
-        console.error("Error in loginUser:", error);
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({ message: 'Server error' });
     }
+};
+
+// @desc    Forgot password
+// @route   POST /api/auth/forgot-password
+// @access  Public
+export const forgotPassword = async (req, res) => {
+    // Placeholder function
+    res.status(200).json({ message: "Password reset email sent (placeholder)" });
+};
+
+// @desc    Reset password
+// @route   PUT /api/auth/reset-password/:resettoken
+// @access  Public
+export const resetPassword = async (req, res) => {
+    // Placeholder function
+    res.status(200).json({ message: "Password reset successful (placeholder)" });
 };
